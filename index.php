@@ -2,14 +2,16 @@
 
 require('vendor/autoload.php');
 
+use Core\Database\Database;
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 use Core\Router\Router;
 
 Router::get('/get/{id}', function($id) {
-    dump($id);
-    echo 'Rota GET!';
+  $db = Database::getInstance()->getConnection();
+  dump($db);
 })->middleware('apiKey');
 
 Router::post('/post', function($id) {
