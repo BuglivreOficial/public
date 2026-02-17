@@ -3,9 +3,19 @@
 require('vendor/autoload.php');
 
 use Core\Database\Database;
+use Core\Http\Response;
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+//Vou implementa um sistema de logs
+try {
+  $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+  $dotenv->load();
+} catch(\Dotenv\Exception\InvalidPathException $e) {
+  (new Response())->json([
+     'code' => 'INTERNAL_SERVER_ERROR',
+        'message' => 'O servidor encontrou uma situação com a qual não sabe lidar.',
+        'at_created' => date('d/m/y H:i:s')
+  ])->status(500)->send();
+}
 
 use Core\Router\Router;
 
@@ -15,16 +25,16 @@ Router::get('/get/{id}', function($id) {
 })->middleware('apiKey');
 
 Router::post('/post', function($id) {
-    dump($id);
-    echo 'Rota POST!';
+  dump($id);
+  echo 'Rota POST!';
 });
 
 Router::put('/put', function () {
-    echo 'Rota PUT!';
+  echo 'Rota PUT!';
 });
 
 Router::delete('/delete', function() {
-    echo 'Rota DELETE!';
+  echo 'Rota DELETE!';
 });
 
 
